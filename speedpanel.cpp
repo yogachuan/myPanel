@@ -7,8 +7,8 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
     //设置背景
     m_bg = QPixmap(":/res/background.png");
     QPalette pal = this->palette();
-    pal.setBrush(QPalette::Window, QBrush(m_bg));
-//    pal.setBrush(QPalette::Background, QBrush(m_bg));//win系统
+//    pal.setBrush(QPalette::Window, QBrush(m_bg));
+    pal.setBrush(QPalette::Background, QBrush(m_bg));//win系统
     setPalette(pal);
 //    setFixedSize(1280,800);
 
@@ -89,11 +89,12 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
         if(i%5 == 0)
         {
             painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+
+            painter.drawText(-25, 20, 50, 20,Qt::AlignCenter,QString::number(i));
         }else
         {
             painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
         }
-        painter.drawText(-25, 20, 50, 20,Qt::AlignCenter,QString::number(i));
         painter.restore();
     }
 
