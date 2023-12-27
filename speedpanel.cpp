@@ -12,19 +12,30 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
     pal.setBrush(QPalette::Background, QBrush(m_bg));//win系统
     setPalette(pal);
 //    setFixedSize(1280,800);
-
+    degRotate = speed/8;
     myTimer = new QTimer(this);
     myTimer->start(1);
     connect(myTimer, &QTimer::timeout, this, [=]{
-        degUpdated();
+        speedUpdated();
     });
 
+}
+
+void SpeedPanel::setValue(qreal speed)
+{
+    degRotate = speed*8;
+    update();
+
+}
+
+qreal SpeedPanel::getValue()
+{
+    return speed;
 }
 
 
 void SpeedPanel::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
     QPainter painter(this);
     painter.drawPixmap(rect(), m_bg, QRect());
     int width=this->width();
@@ -49,6 +60,7 @@ void SpeedPanel::paintEvent(QPaintEvent *event)
     DrawCircle_bom_small(painter,radius/7*3);//中间小圆及时速
     DrawUnit(painter, -radius*0.1);//单位和标题显示
 
+    QWidget::paintEvent(event);
 }
 
 
@@ -276,13 +288,30 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
 
 
 
-void SpeedPanel::degUpdated()
+void SpeedPanel::speedUpdated()
 {
+//    int deg = getValue()*8;
+//    if(flag)
+//    {
+//        deg++;
+//        if(deg > 240)
+//            flag=0;
+//    }
+//    else
+//    {
+//        deg--;
+//        if(deg < 0)
+//            flag=1;
+
+//    }
+//    speed = deg/8;
+
     if(degRotate==240){
         myTimer->stop();
         return;
     }
 
     degRotate++;
+    speed = degRotate/8;
     update();//很重要，通过update方法自动调用paintEvent
 }

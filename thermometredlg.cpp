@@ -10,12 +10,34 @@ ThermometreDlg::ThermometreDlg(QWidget *parent) : QWidget(parent)
     curValue = m_value;
     QTimer *at = new QTimer(this);
     at->start(1000);
-    m_valueAnimation = new QPropertyAnimation(this, "value");
-    m_valueAnimation->setDuration(1000);
-    m_valueAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    m_valueAnimation->setLoopCount(1);
-    connect(at, SIGNAL(timeout()), this, SLOT(startAnimation()));
+//    m_valueAnimation = new QPropertyAnimation(this, "value");//value和头文件中的声明属性一致
+//    m_valueAnimation->setDuration(1000);
+//    m_valueAnimation->setEasingCurve(QEasingCurve::OutCubic);
+//    m_valueAnimation->setLoopCount(1);
 
+    connect(at, &QTimer::timeout, this, [=]{
+        valueUpdate(curValue);
+    });
+//    connect(at, SIGNAL(timeout()), this, SLOT(startAnimation()));
+
+}
+
+void ThermometreDlg::paintEvent(QPaintEvent *event)
+{
+    updateRect();
+    QPainter painter(this);
+    QPen pen(Qt::black);
+    painter.translate(this->width()/2, this->height()/2);  //坐标轴移动到中心点
+    painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);  // 启用反锯齿
+    //绘制上方的柱状
+    drawRect(painter);
+    //绘制底部的圆
+    drawBottom(painter);
+
+    //绘制刻度以及刻度值
+    drawScale(painter);
+
+    QWidget::paintEvent(event);
 }
 
 void ThermometreDlg::updateRect()
@@ -26,47 +48,26 @@ void ThermometreDlg::updateRect()
     m_rect.setHeight(height() - 40 - m_width* m_radius);
 }
 
-void ThermometreDlg::setValue(qreal value)
+void ThermometreDlg::drawRect(QPainter &painter)
 {
-    m_value = value;
-    update();
-}
-
-void ThermometreDlg::changeValue(qreal value)
-{
-    if(value > maxValue)
-        value = maxValue;
-    if(value < minValue)
-        value = minValue;
-    curValue = value;
-}
-
-qreal ThermometreDlg::getValue()
-{
-    return m_value;
-}
-
-
-void ThermometreDlg::paintEvent(QPaintEvent *e)
-{
-    updateRect();
-    QPainter painter(this);
-    QPen pen(Qt::black);
-    painter.translate(this->width()/2, this->height()/2);  //坐标轴移动到中心点
-    painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);  // 启用反锯齿
     painter.save();
-    //绘制上方的柱状
     painter.fillRect(m_rect, QColor(168,200, 225));
+    painter.restore();
+}
 
-    //绘制底部的圆
+void ThermometreDlg::drawBottom(QPainter &painter)
+{
+    painter.save();
     QRectF tmpRect = QRectF(m_rect.bottomLeft(), QPointF(m_width, height()/2- m_width*m_radius));
     painter.fillRect(tmpRect, QColor(255, 0, 0));
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(255, 0, 0));
     painter.drawEllipse(tmpRect.bottomLeft()+QPointF(tmpRect.width()/2, 0),m_width*m_radius, m_width*m_radius);
     painter.restore();
+}
 
-    //绘制刻度以及刻度值
+void ThermometreDlg::drawScale(QPainter &painter)
+{
     painter.save();
     painter.setPen(QColor(Qt::black));
     int nYCount = (maxValue - minValue)/10+1;
@@ -91,7 +92,6 @@ void ThermometreDlg::paintEvent(QPaintEvent *e)
         }
     }
     painter.restore();
-
     //根据值填充m_rect
     qreal h = (m_value-minValue)/(maxValue-minValue)*(m_rect.height()-perHeight);
     if(h<0)
@@ -99,9 +99,41 @@ void ThermometreDlg::paintEvent(QPaintEvent *e)
     if(h > m_rect.height())
         h = m_rect.height();
     painter.fillRect(m_rect.adjusted(0, m_rect.height()-h-perHeight/2-1 , 0, 0), QColor(255, 0, 0));
-
-    QWidget::paintEvent(e);
 }
+
+void ThermometreDlg::setValue(qreal value)
+{
+    m_value = value;
+    update();
+}
+
+void ThermometreDlg::valueUpdate(qreal value)
+{
+    if(flag)
+    {
+        value++;
+        if(value > maxValue)
+            flag=0;
+    }
+    else
+    {
+        value--;
+        if(value < minValue)
+            flag=1;
+
+    }
+    curValue = value;
+
+    //使用动画的话，下面省略
+    m_value = value;
+    update();
+}
+
+qreal ThermometreDlg::getValue()
+{
+    return m_value;
+}
+
 
 void ThermometreDlg::startAnimation()
 {

@@ -27,8 +27,6 @@ public:
 
 public:
 
-    int degRotate =30;//角度,默认30在中间
-    int pitch=0;//俯仰,默认0在中间
 
 
 
@@ -51,6 +49,10 @@ private:
     QTimer *myTimer;
     int HDirection=0;//水平方向,1右,0左
     int VDirection=0;//竖直方向,1上,0下
+
+
+    int degRotate =30;//角度,默认30在中间
+    int pitch=0;//俯仰,默认0在中间
 
 protected:
     void paintEvent(QPaintEvent *event) override;

@@ -17,7 +17,6 @@ ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 
 void ShipPanel::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     int width=this->width();
@@ -45,6 +44,7 @@ void ShipPanel::paintEvent(QPaintEvent *event)
     DrawVScale(painter, radius*0.1);//纵摇刻度线及数字
 
 
+    QWidget::paintEvent(event);
 }
 
 

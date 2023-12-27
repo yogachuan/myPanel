@@ -14,14 +14,15 @@
 class SpeedPanel : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(qreal speed READ getValue WRITE setValue)  //声明属性
 public:
     explicit SpeedPanel(QWidget *parent = nullptr);
+    void setValue(qreal speed);
+    qreal getValue();
 
-    void degUpdated();//速度变化槽函数
 
-public:
-
-    int degRotate =0;
+public slots:
+    void speedUpdated();//速度变化槽函数
 
 
 private:
@@ -41,6 +42,9 @@ private:
     QTimer *myTimer;
     int radius;//仪表盘的中心位置
     int direction;//指针运动的方向,1为前进，0为后退
+    int degRotate;
+    qreal speed = 0;
+    int flag=1;//0后退，1前进
 
 
 protected:
