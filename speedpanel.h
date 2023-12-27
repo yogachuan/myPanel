@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QRadialGradient>//渐变
 #include <QTimer>
+#include <QFontMetricsF>
 
 class SpeedPanel : public QWidget
 {
@@ -16,7 +17,7 @@ class SpeedPanel : public QWidget
 public:
     explicit SpeedPanel(QWidget *parent = nullptr);
 
-    void degChanged();//速度变化槽函数
+    void degUpdated();//速度变化槽函数
 
 public:
 

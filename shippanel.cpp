@@ -1,7 +1,5 @@
 #include "shippanel.h"
 
-#include <QPoint>
-
 
 ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 {
@@ -21,10 +19,14 @@ void ShipPanel::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     int width=this->width();
     int height=this->height();//移动仪表盘的高度
     int radius=((width>height)?height:width)/2.0;//仪表盘的中心位置
-
+    //设置画笔
+    painter.setPen(Qt::NoPen);
+    //设置画刷颜色
+    painter.setBrush(QColor(138,43,226));
     //启用反锯齿
     painter.setRenderHint(QPainter::Antialiasing, true);
     DrawBG(painter, height/2,height/2);//画背景
@@ -68,7 +70,7 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(8);
-    font.setBold(true);
+//    font.setBold(true);
     painter.setFont(font);
 
     //绘制31个小点
@@ -93,9 +95,14 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
 
         if(i%5 == 0)
         {
+            painter.setPen(Qt::NoPen);
             painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
-
-            painter.drawText(8, -20, 50, 40,Qt::AlignCenter,QString::number(2*i-30));
+            painter.setPen(QColor(255,255,255));
+            QFontMetricsF fm = QFontMetricsF(painter.font());
+            QString str = QString::number(2*i-30);
+            int w = (int)fm.width(str);
+            int h = (int)fm.height();
+            painter.drawText(QPointF(w/2+10,h/2),str);
         }else
         {
 //            painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
@@ -142,10 +149,14 @@ void ShipPanel:: DrawUnit(QPainter & painter, int radius)
     font.setPointSize(10);
     font.setBold(true);
     painter.setFont(font);
-    painter.translate(QPoint(0,0).x(),QPoint(0,0).y() );
+    painter.translate(QPointF(0,0).x(),QPointF(0,0).y() );
     QString num = QString::number(degRotate-30);
 
-    painter.drawText(-this->width()/2, radius*10-radius/7*10, radius/7*80, radius/7*10,Qt::AlignLeft,QString("舵角：%1 °").arg(num));
+
+    QFontMetricsF fm = QFontMetricsF(painter.font());
+    QString str = QString("舵角：%1 °").arg(num);
+    painter.drawText(QPointF(-this->width()/2,this->height()/2),str);
+
     painter.restore();
 }
 
@@ -163,7 +174,7 @@ void ShipPanel::  DrawPointer(QPainter &painter, int radius)
     painter.save();
 
     //计算并选择绘图对象坐标
-    QPoint point(0,0);
+    QPointF point(0,0);
     point.setX(radius*qCos(((240+degRotate)*M_PI)/180));
     point.setY(radius*qSin(((240+degRotate)*M_PI)/180));
     painter.translate(point.x(), point.y());
@@ -207,12 +218,12 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
     pointPath_small.lineTo(d,1);
     pointPath_small.lineTo(d,-1);
 
-    for(int i=-10;i<11;++i)
+    for(int i=-10;i<11;i+=5)
     {
         painter.save();
-        QPoint point(0,0);
-        point.setY((d/3.5)*(i+pitch));
-        painter.translate(point.x(), point.y());
+        QPointF point(0,0);
+        point.setY((d/4)*(i+pitch)); //(d/3.5)为纵向刻度间距
+        painter.translate(point.x(), -point.y());
         painter.setBrush(QColor(255,255,255));
 
         //设置画笔，画笔默认NOPEN
@@ -220,21 +231,25 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
         QFont font;
         font.setFamily("Arial");
         font.setPointSize(8);
-        font.setBold(true);
+//        font.setBold(true);
         painter.setFont(font);
+
 
         if(i%10 == 0)
         {
             painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
-
-            painter.drawText(-4*d, -20, 50, 40,Qt::AlignCenter,QString::number(i));
         }
-        else if(i%5 == 0)
+        else
         {
             painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
 
-            painter.drawText(-4*d, -20, 50, 40,Qt::AlignCenter,QString::number(i));
         }
+
+        QFontMetricsF fm = QFontMetricsF(painter.font());
+        QString str = QString::number(i);
+        int w = (int)fm.width(str);
+        int h = (int)fm.height();
+        painter.drawText(QPointF(-w/2-4*d,h/2),str);
         painter.restore();
 
     }
@@ -245,17 +260,17 @@ void ShipPanel::DrawBG(QPainter &painter, int l, int r)
     int w = this->width()/2;
     int h = this->height();
 
-    QPoint points_top[4] = {
-        QPoint(0,0),
-        QPoint(0,l+w*qTan((30-degRotate)*M_PI/180)),
-        QPoint(2*w, r-w*qTan((30-degRotate)*M_PI/180)),
-        QPoint(2*w, 0),
+    QPointF points_top[4] = {
+        QPointF(0,0),
+        QPointF(0,l+w*qTan((30-degRotate)*M_PI/180)),
+        QPointF(2*w, r-w*qTan((30-degRotate)*M_PI/180)),
+        QPointF(2*w, 0),
     };
-    QPoint points_bottom[4] = {
-        QPoint(0,l+w*qTan((30-degRotate)*M_PI/180)),
-        QPoint(0,h),
-        QPoint(2*w, h),
-        QPoint(2*w,r-w*qTan((30-degRotate)*M_PI/180)),
+    QPointF points_bottom[4] = {
+        QPointF(0,l+w*qTan((30-degRotate)*M_PI/180)),
+        QPointF(0,h),
+        QPointF(2*w, h),
+        QPointF(2*w,r-w*qTan((30-degRotate)*M_PI/180)),
     };
 
     painter.save();
@@ -276,14 +291,14 @@ void ShipPanel::DrawBaseLines(QPainter &painter)
 {
     painter.save();
 
-    QPoint points[7] = {
-        QPoint(-150,0),
-        QPoint(-100,0),
-        QPoint(150,0),
-        QPoint(100,0),
-        QPoint(0,0),
-        QPoint(-10, 20),
-        QPoint(10,20),
+    QPointF points[7] = {
+        QPointF(-150,0),
+        QPointF(-100,0),
+        QPointF(150,0),
+        QPointF(100,0),
+        QPointF(0,0),
+        QPointF(-10, 20),
+        QPointF(10,20),
     };
     QPen pen(QColor(238,210,2), 3);
     pen.setJoinStyle(Qt::RoundJoin);

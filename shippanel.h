@@ -12,6 +12,9 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QKeyEvent>
+#include <QFontMetricsF>
+#include <QPointF>
+
 
 
 class ShipPanel : public QWidget

@@ -12,12 +12,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     shippanel.cpp \
-    speedpanel.cpp
+    speedpanel.cpp \
+    thermometredlg.cpp
 
 HEADERS += \
     mainwindow.h \
     shippanel.h \
-    speedpanel.h
+    speedpanel.h \
+    thermometredlg.h
 
 FORMS += \
     mainwindow.ui

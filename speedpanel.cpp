@@ -2,6 +2,7 @@
 
 
 
+
 SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
 {
     //设置背景
@@ -15,7 +16,7 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
     myTimer = new QTimer(this);
     myTimer->start(1);
     connect(myTimer, &QTimer::timeout, this, [=]{
-        degChanged();
+        degUpdated();
     });
 
 }
@@ -31,8 +32,13 @@ void SpeedPanel::paintEvent(QPaintEvent *event)
     int radius=((width>height)?height:width)/2.0;//仪表盘的中心位置                                                                                                                                                                                                 ;
     //移动画笔到中下方
     painter.translate(width/2,height/2);
+    //设置画笔
+    painter.setPen(Qt::NoPen);
+    //设置画刷颜色
+    painter.setBrush(QColor(138,43,226));
     //启用反锯齿
     painter.setRenderHint(QPainter::Antialiasing, true);
+
     DrawSmallScale(painter,radius*0.75);//刻度线
     DrawCircle(painter,radius*0.9);//渐变发光外扇形
     DrawCircle_arc(painter,radius*0.9);//动态扇形环
@@ -68,13 +74,14 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(10);
-    font.setBold(true);
     painter.setFont(font);
+
 
     //绘制31个小点
     for(int i=0;i<31;++i){
         QPointF point(0,0);
         painter.save();
+        painter.setPen(Qt::NoPen);
         point.setX(radius*qCos(((210-i*8)*M_PI)/180));
         point.setY(radius*qSin(((210-i*8)*M_PI)/180));
 
@@ -89,8 +96,11 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
         if(i%5 == 0)
         {
             painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
-
-            painter.drawText(-25, 20, 50, 20,Qt::AlignCenter,QString::number(i));
+            painter.setPen(QColor(255,255,255));
+            QFontMetricsF fm = QFontMetricsF(painter.font());
+            int w = (int)fm.width(QString::number(i));
+            int h = (int)fm.height();
+            painter.drawText(QPointF(-w/2,h/2+radius/5),QString::number(i));
         }else
         {
             painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
@@ -131,13 +141,23 @@ void SpeedPanel:: DrawUnit(QPainter & painter, int radius)
 {
     painter.save();
     painter.setPen(QColor(255,255,255));
+
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(10);
     font.setBold(true);
     painter.setFont(font);
-    painter.drawText(radius/7*11, -radius+10, -radius/7*22, -radius/7*8,Qt::AlignCenter,QString("Kn/H"));
-    painter.drawText(radius/7*17, -radius/7*19, -radius/7*34, -radius/7*8,Qt::AlignCenter,QString("当前航速"));
+
+    QFontMetricsF fm1 = QFontMetricsF(painter.font());
+    int w1 = (int)fm1.width(QString("Kn/H"));
+    int h1 = (int)fm1.height();
+    painter.drawText(QPointF(-w1/2,h1/2-radius*2),QString("Kn/H"));
+
+    QFontMetricsF fm2 = QFontMetricsF(painter.font());
+    int w2 = (int)fm2.width(QString("当前航速"));
+    int h2 = (int)fm2.height();
+    painter.drawText(QPointF(-w2/2,h2/2-radius*4),QString("当前航速"));
+
     painter.restore();
 }
 
@@ -240,9 +260,14 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
     painter.setPen(QColor(255,255,255));
     QFont font;
     font.setFamily("Arial");
-    font.setPointSize(30);
+    font.setPointSize(20);
     painter.setFont(font);
-    painter.drawText(-radius+50, -radius+50, 2*(radius-50),2*(radius-50),Qt::AlignCenter,QString::number(degRotate/8));
+
+    QFontMetricsF fm = QFontMetricsF(painter.font());
+    QString str = QString::number(degRotate/8);
+    int w = (int)fm.width(str);
+    int h = (int)fm.height();
+    painter.drawText(QPointF(-w/2, h/2),str);
     painter.setPen(Qt::NoPen);
     painter.restore();
 }
@@ -251,7 +276,7 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
 
 
 
-void SpeedPanel::degChanged()
+void SpeedPanel::degUpdated()
 {
     if(degRotate==240){
         myTimer->stop();

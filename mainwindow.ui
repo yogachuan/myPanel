@@ -21,6 +21,11 @@
     <item>
      <widget class="SpeedPanel" name="speedPanel" native="true"/>
     </item>
+    <item>
+     <widget class="ThermometreDlg" name="thermometreDlg" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -29,7 +34,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -46,6 +51,12 @@
    <class>SpeedPanel</class>
    <extends>QWidget</extends>
    <header>speedpanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ThermometreDlg</class>
+   <extends>QWidget</extends>
+   <header>thermometredlg.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
