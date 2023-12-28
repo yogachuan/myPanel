@@ -30,7 +30,7 @@ void SpeedPanel::setValue(qreal speed)
 
 qreal SpeedPanel::getValue()
 {
-    return speed;
+    return degRotate/8;
 }
 
 
@@ -312,6 +312,5 @@ void SpeedPanel::speedUpdated()
     }
 
     degRotate++;
-    speed = degRotate/8;
     update();//很重要，通过update方法自动调用paintEvent
 }
