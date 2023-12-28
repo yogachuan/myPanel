@@ -1,0 +1,10 @@
+debug/main.o
+debug/mainwindow.o
+debug/shippanel.o
+debug/speedpanel.o
+debug/thermometredlg.o
+debug/qrc_res.o
+debug/moc_mainwindow.o
+debug/moc_shippanel.o
+debug/moc_speedpanel.o
+debug/moc_thermometredlg.o

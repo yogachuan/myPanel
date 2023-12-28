@@ -26,7 +26,6 @@ void ThermometreDlg::paintEvent(QPaintEvent *event)
 {
     updateRect();
     QPainter painter(this);
-    QPen pen(Qt::black);
     painter.translate(this->width()/2, this->height()/2);  //坐标轴移动到中心点
     painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);  // 启用反锯齿
     //绘制上方的柱状
