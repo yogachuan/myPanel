@@ -3,9 +3,7 @@
 
 ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 {
-
 //    setFixedSize(1280,800);
-
     myTimer = new QTimer(this);
     myTimer->start(100);
     connect(myTimer, &QTimer::timeout, this, [=]{
@@ -101,7 +99,7 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
 //        坐标系旋转
         painter.rotate(60+i*2);
 
-        if(i>5 | i<25)
+        if((i>5) | (i<25))
         {
 //          painter.setBrush(QColor(255,255,255));
           painter.setPen(QColor(255,255,255));
