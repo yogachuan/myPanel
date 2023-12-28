@@ -117,7 +117,11 @@ void ThermometreDlg::drawScale(QPainter &painter)
 void ThermometreDlg::setValue(qreal value)
 {
     m_value = value;
-    update();
+}
+
+qreal ThermometreDlg::getValue()
+{
+    return m_value;
 }
 
 void ThermometreDlg::valueUpdate(qreal value)
@@ -136,15 +140,8 @@ void ThermometreDlg::valueUpdate(qreal value)
 
     }
     curValue = value;
-
-    //使用动画的话，下面省略
     m_value = value;
     update();
-}
-
-qreal ThermometreDlg::getValue()
-{
-    return m_value;
 }
 
 

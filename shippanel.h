@@ -20,14 +20,22 @@
 class ShipPanel : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(qreal value READ getDegValue WRITE setDegValue)
+    Q_PROPERTY(qreal value READ getPitchValue WRITE setPitchValue)
+
 public:
     explicit ShipPanel(QWidget *parent = nullptr);
-    void degUpdate();//舵角变化槽函数
-    void pitchUpdate();//俯仰变化槽函数
+
 
 public:
+    qreal getDegValue();
+    qreal getPitchValue();
+    void setDegValue(qreal deg);
+    void setPitchValue(qreal ph);
 
-
+public slots:
+    void degUpdate();//舵角变化槽函数
+    void pitchUpdate();//俯仰变化槽函数
 
 
 private:
@@ -49,7 +57,6 @@ private:
     QTimer *myTimer;
     int HDirection=0;//水平方向,1右,0左
     int VDirection=0;//竖直方向,1上,0下
-
 
     int degRotate =30;//角度,默认30在中间
     int pitch=0;//俯仰,默认0在中间

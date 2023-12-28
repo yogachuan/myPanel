@@ -15,6 +15,26 @@ ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 
 }
 
+qreal ShipPanel::getDegValue()
+{
+    return degRotate;
+}
+
+qreal ShipPanel::getPitchValue()
+{
+    return pitch;
+}
+
+void ShipPanel::setDegValue(qreal deg)
+{
+    degRotate = deg;
+}
+
+void ShipPanel::setPitchValue(qreal ph)
+{
+    pitch = ph;
+}
+
 void ShipPanel::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
@@ -52,21 +72,18 @@ void ShipPanel::paintEvent(QPaintEvent *event)
 void ShipPanel::DrawHScale(QPainter& painter,int radius)
 {
     //组装点的路径图
-    QPainterPath pointPath_small;
-    pointPath_small.moveTo(-2,-2);
-    pointPath_small.lineTo(-2,2);
-    pointPath_small.lineTo(2,2);
-    pointPath_small.lineTo(2,-2);
+//    QPainterPath pointPath_small;
+//    pointPath_small.moveTo(-2,-2);
+//    pointPath_small.lineTo(-2,2);
+//    pointPath_small.lineTo(2,2);
+//    pointPath_small.lineTo(2,-2);
 
+//    QPainterPath pointPath_big;
+//    pointPath_big.moveTo(-2,-2);
+//    pointPath_big.lineTo(-2,2);
+//    pointPath_big.lineTo(8,2);
+//    pointPath_big.lineTo(8,-2);
 
-    QPainterPath pointPath_big;
-    pointPath_big.moveTo(-2,-2);
-    pointPath_big.lineTo(-2,2);
-    pointPath_big.lineTo(8,2);
-    pointPath_big.lineTo(8,-2);
-
-    //设置画笔，画笔默认NOPEN
-    painter.setPen(QColor(255,255,255));
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(8);
@@ -86,17 +103,19 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
 
         if(i>5 | i<25)
         {
-          painter.setBrush(QColor(255,255,255));
+//          painter.setBrush(QColor(255,255,255));
+          painter.setPen(QColor(255,255,255));
         }
         if(i<=5 | i>=25)
         {
-          painter.setBrush(QColor(235,70,70));
+//          painter.setBrush(QColor(235,70,70));
+            painter.setPen(QColor(235,70,70));
         }
 
         if(i%5 == 0)
         {
-            painter.setPen(Qt::NoPen);
-            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+//            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+            painter.drawLine(-2,0,8,0);
             painter.setPen(QColor(255,255,255));
             QFontMetricsF fm = QFontMetricsF(painter.font());
             QString str = QString::number(2*i-30);
@@ -109,7 +128,6 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
         }
         painter.restore();
     }
-    painter.setPen(Qt::NoPen);
 }
 
 
@@ -207,16 +225,16 @@ void ShipPanel::DrawCircle_line(QPainter &painter, int radius)
 void ShipPanel::DrawVScale(QPainter &painter, int d)
 {
     QPainterPath pointPath_big;
-    pointPath_big.moveTo(-2*d,-1);
-    pointPath_big.lineTo(-2*d,1);
-    pointPath_big.lineTo(2*d,1);
-    pointPath_big.lineTo(2*d,-1);
+//    pointPath_big.moveTo(-2*d,-1);
+//    pointPath_big.lineTo(-2*d,1);
+//    pointPath_big.lineTo(2*d,1);
+//    pointPath_big.lineTo(2*d,-1);
 
-    QPainterPath pointPath_small;
-    pointPath_small.moveTo(-d,-1);
-    pointPath_small.lineTo(-d,1);
-    pointPath_small.lineTo(d,1);
-    pointPath_small.lineTo(d,-1);
+//    QPainterPath pointPath_small;
+//    pointPath_small.moveTo(-d,-1);
+//    pointPath_small.lineTo(-d,1);
+//    pointPath_small.lineTo(d,1);
+//    pointPath_small.lineTo(d,-1);
 
     for(int i=-10;i<11;i+=5)
     {
@@ -224,7 +242,6 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
         QPointF point(0,0);
         point.setY((d/4)*(i+pitch)); //(d/3.5)为纵向刻度间距
         painter.translate(point.x(), -point.y());
-        painter.setBrush(QColor(255,255,255));
 
         //设置画笔，画笔默认NOPEN
         painter.setPen(QColor(255,255,255));
@@ -237,12 +254,13 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
 
         if(i%10 == 0)
         {
-            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+//            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+            painter.drawLine(-d*2,0,d*2,0);
         }
         else
         {
-            painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
-
+//            painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
+            painter.drawLine(-d,0,d,0);
         }
 
         QFontMetricsF fm = QFontMetricsF(painter.font());
@@ -300,7 +318,7 @@ void ShipPanel::DrawBaseLines(QPainter &painter)
         QPointF(-10, 20),
         QPointF(10,20),
     };
-    QPen pen(QColor(238,210,2), 3);
+    QPen pen(QColor(Qt::yellow), 1);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setCapStyle(Qt::RoundCap);
     painter.setPen(pen);

@@ -24,8 +24,6 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
 void SpeedPanel::setValue(qreal speed)
 {
     degRotate = speed*8;
-    update();
-
 }
 
 qreal SpeedPanel::getValue()
@@ -68,32 +66,28 @@ void SpeedPanel::paintEvent(QPaintEvent *event)
 void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
 {
     //组装点的路径图
-    QPainterPath pointPath_small;
-    pointPath_small.moveTo(-2,-2);
-    pointPath_small.lineTo(2,-2);
-    pointPath_small.lineTo(2,8);
-    pointPath_small.lineTo(-2,8);
+//    QPainterPath pointPath_small;
+//    pointPath_small.moveTo(-2,-2);
+//    pointPath_small.lineTo(2,-2);
+//    pointPath_small.lineTo(2,8);
+//    pointPath_small.lineTo(-2,8);
 
 
-    QPainterPath pointPath_big;
-    pointPath_big.moveTo(-2,-2);
-    pointPath_big.lineTo(2,-2);
-    pointPath_big.lineTo(2,20);
-    pointPath_big.lineTo(-2,20);
+//    QPainterPath pointPath_big;
+//    pointPath_big.moveTo(-2,-2);
+//    pointPath_big.lineTo(2,-2);
+//    pointPath_big.lineTo(2,20);
+//    pointPath_big.lineTo(-2,20);
 
-
-    painter.setPen(QColor(255,255,255));
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(10);
     painter.setFont(font);
 
-
     //绘制31个小点
     for(int i=0;i<31;++i){
         QPointF point(0,0);
         painter.save();
-        painter.setPen(Qt::NoPen);
         point.setX(radius*qCos(((210-i*8)*M_PI)/180));
         point.setY(radius*qSin(((210-i*8)*M_PI)/180));
 
@@ -102,20 +96,23 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
 //        坐标系旋转
         painter.rotate(-120+i*8);
 
-        i<20? painter.setBrush(QColor(255,255,255)) : painter.setBrush(QColor(235,70,70));
-
+//        i<20? painter.setBrush(QColor(255,255,255)) : painter.setBrush(QColor(235,70,70));
+        i<20? painter.setPen(QColor(255,255,255)) : painter.setPen(QColor(235,70,70));
 
         if(i%5 == 0)
         {
-            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
-            painter.setPen(QColor(255,255,255));
+//            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
+            painter.drawLine(0,-2,0,20);
             QFontMetricsF fm = QFontMetricsF(painter.font());
             int w = (int)fm.width(QString::number(i));
             int h = (int)fm.height();
+            painter.setPen(QColor(255,255,255));
             painter.drawText(QPointF(-w/2,h/2+radius/5),QString::number(i));
+
         }else
         {
-            painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
+//            painter.drawPath(pointPath_small);//绘画小刻度（其实是个矩形）
+            painter.drawLine(0,-2,0,8);
         }
         painter.restore();
     }
@@ -290,21 +287,6 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
 
 void SpeedPanel::speedUpdated()
 {
-//    int deg = getValue()*8;
-//    if(flag)
-//    {
-//        deg++;
-//        if(deg > 240)
-//            flag=0;
-//    }
-//    else
-//    {
-//        deg--;
-//        if(deg < 0)
-//            flag=1;
-
-//    }
-//    speed = deg/8;
 
     if(degRotate==240){
         myTimer->stop();
