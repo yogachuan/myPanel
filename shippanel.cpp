@@ -15,7 +15,7 @@ ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 
 qreal ShipPanel::getDegValue()
 {
-    return degRotate;
+    return degRotate-30;
 }
 
 qreal ShipPanel::getPitchValue()
@@ -25,11 +25,15 @@ qreal ShipPanel::getPitchValue()
 
 void ShipPanel::setDegValue(qreal deg)
 {
-    degRotate = deg;
+    if(deg < -30 | deg >30)
+        return;
+    degRotate = deg + 30;
 }
 
 void ShipPanel::setPitchValue(qreal ph)
 {
+    if (ph <-10 | ph>10)
+        return;
     pitch = ph;
 }
 
@@ -43,7 +47,6 @@ void ShipPanel::paintEvent(QPaintEvent *event)
     //设置画笔
     painter.setPen(Qt::NoPen);
     //设置画刷颜色
-    painter.setBrush(QColor(138,43,226));
     //启用反锯齿
     painter.setRenderHint(QPainter::Antialiasing, true);
     DrawBG(painter, height/2,height/2);//画背景
@@ -102,19 +105,19 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
         if((i>5) | (i<25))
         {
 //          painter.setBrush(QColor(255,255,255));
-          painter.setPen(QColor(255,255,255));
+          painter.setPen(WHITE);
         }
         if(i<=5 | i>=25)
         {
 //          painter.setBrush(QColor(235,70,70));
-            painter.setPen(QColor(235,70,70));
+            painter.setPen(RED);
         }
 
         if(i%5 == 0)
         {
 //            painter.drawPath(pointPath_big);//绘画大刻度（其实是个矩形）
             painter.drawLine(-2,0,8,0);
-            painter.setPen(QColor(255,255,255));
+            painter.setPen(WHITE);
             QFontMetricsF fm = QFontMetricsF(painter.font());
             QString str = QString::number(2*i-30);
             int w = (int)fm.width(str);
@@ -158,7 +161,7 @@ void ShipPanel::DrawCircle(QPainter & painter, int radius)
 void ShipPanel:: DrawUnit(QPainter & painter, int radius)
 {
     painter.save();
-    painter.setPen(QColor(255,255,255));
+    painter.setPen(WHITE);
     painter.rotate(-degRotate+30);
     QFont font;
     font.setFamily("Arial");
@@ -195,7 +198,7 @@ void ShipPanel::  DrawPointer(QPainter &painter, int radius)
     point.setY(radius*qSin(((240+degRotate)*M_PI)/180));
     painter.translate(point.x(), point.y());
     painter.rotate(degRotate - 30);
-    painter.setBrush(QColor(102,255,51));
+    painter.setBrush(GREEN);
     painter.drawPath(pointPath);
     painter.restore();
 }
@@ -242,7 +245,7 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
         painter.translate(point.x(), -point.y());
 
         //设置画笔，画笔默认NOPEN
-        painter.setPen(QColor(255,255,255));
+        painter.setPen(WHITE);
         QFont font;
         font.setFamily("Arial");
         font.setPointSize(8);
@@ -316,7 +319,7 @@ void ShipPanel::DrawBaseLines(QPainter &painter)
         QPointF(-10, 20),
         QPointF(10,20),
     };
-    QPen pen(QColor(Qt::yellow), 1);
+    QPen pen(YELLOW, 1);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setCapStyle(Qt::RoundCap);
     painter.setPen(pen);

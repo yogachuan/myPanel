@@ -6,6 +6,12 @@
 #include <QPainter>
 #include <QTimer>
 #include <QDebug>
+#define YELLOW QColor(Qt::yellow)
+#define WHITE QColor(Qt::white)
+#define RED QColor(Qt::red)
+#define GREEN QColor(Qt::green)
+#define BLACK QColor(Qt::black)
+
 
 class ThermometreDlg : public QWidget
 {

@@ -10,14 +10,20 @@
 #include <QRadialGradient>//渐变
 #include <QTimer>
 #include <QFontMetricsF>
+#define YELLOW QColor(Qt::yellow)
+#define WHITE QColor(Qt::white)
+#define RED QColor(Qt::red)
+#define GREEN QColor(Qt::green)
+#define BLACK QColor(Qt::black)
+
 
 class SpeedPanel : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(qreal speed READ getValue WRITE setValue)  //声明属性
+    Q_PROPERTY(qreal value READ getValue WRITE setValue)  //声明属性
 public:
     explicit SpeedPanel(QWidget *parent = nullptr);
-    void setValue(qreal speed);
+    void setValue(qreal value);
     qreal getValue();
 
 
@@ -42,8 +48,7 @@ private:
     QTimer *myTimer;
     int radius;//仪表盘的中心位置
     int direction;//指针运动的方向,1为前进，0为后退
-    int degRotate;
-    qreal speed = 0;
+    int degRotate=0;
     int flag=1;//0后退，1前进
 
 

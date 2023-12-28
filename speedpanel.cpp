@@ -12,7 +12,7 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
     pal.setBrush(QPalette::Background, QBrush(m_bg));//win系统
     setPalette(pal);
 //    setFixedSize(1280,800);
-    degRotate = speed/8;
+
     myTimer = new QTimer(this);
     myTimer->start(1);
     connect(myTimer, &QTimer::timeout, this, [=]{
@@ -21,9 +21,9 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
 
 }
 
-void SpeedPanel::setValue(qreal speed)
+void SpeedPanel::setValue(qreal value)
 {
-    degRotate = speed*8;
+    degRotate = value*8;
 }
 
 qreal SpeedPanel::getValue()
@@ -43,8 +43,6 @@ void SpeedPanel::paintEvent(QPaintEvent *event)
     painter.translate(width/2,height/2);
     //设置画笔
     painter.setPen(Qt::NoPen);
-    //设置画刷颜色
-    painter.setBrush(QColor(138,43,226));
     //启用反锯齿
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -97,7 +95,7 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
         painter.rotate(-120+i*8);
 
 //        i<20? painter.setBrush(QColor(255,255,255)) : painter.setBrush(QColor(235,70,70));
-        i<20? painter.setPen(QColor(255,255,255)) : painter.setPen(QColor(235,70,70));
+        i<20? painter.setPen(WHITE) : painter.setPen(RED);
 
         if(i%5 == 0)
         {
@@ -106,7 +104,7 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
             QFontMetricsF fm = QFontMetricsF(painter.font());
             int w = (int)fm.width(QString::number(i));
             int h = (int)fm.height();
-            painter.setPen(QColor(255,255,255));
+            painter.setPen(WHITE);
             painter.drawText(QPointF(-w/2,h/2+radius/5),QString::number(i));
 
         }else
@@ -117,7 +115,6 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
         painter.restore();
     }
 
-    painter.setPen(Qt::NoPen);
 }
 
 
@@ -149,7 +146,7 @@ void SpeedPanel::DrawCircle(QPainter & painter, int radius)
 void SpeedPanel:: DrawUnit(QPainter & painter, int radius)
 {
     painter.save();
-    painter.setPen(QColor(255,255,255));
+    painter.setPen(WHITE);
 
     QFont font;
     font.setFamily("Arial");
@@ -199,7 +196,7 @@ void SpeedPanel::DrawPointer(QPainter &painter, int radius)
 
     //计算并选择绘图对象坐标
     painter.rotate(degRotate - 120);
-    painter.setBrush(QColor(255,255,255));
+    painter.setBrush(WHITE);
     painter.drawPath(pointPath.subtracted(inRing));
     painter.restore();
 }
@@ -234,7 +231,7 @@ void SpeedPanel::DrawCircle_bom_big(QPainter &painter, int radius)
     inRing.moveTo(0,0);
     inRing.addEllipse(-radius+50,-radius + 50,2*(radius-50),2*(radius-50));
     //设置画刷
-    painter.setBrush(QColor(10,20,30));
+    painter.setBrush(BLACK);
     painter.drawPath(inRing);
     painter.restore();
 }
@@ -262,11 +259,11 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
     inRing.moveTo(0,0);
     inRing.addEllipse(-radius+50,-radius + 50,2*(radius-50),2*(radius-50));
     //设置画刷
-    painter.setBrush(QColor(10,20,30));
+    painter.setBrush(BLACK);
     painter.drawPath(inRing);
 
     //时速
-    painter.setPen(QColor(255,255,255));
+    painter.setPen(WHITE);
     QFont font;
     font.setFamily("Arial");
     font.setPointSize(20);
@@ -277,12 +274,8 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
     int w = (int)fm.width(str);
     int h = (int)fm.height();
     painter.drawText(QPointF(-w/2, h/2),str);
-    painter.setPen(Qt::NoPen);
     painter.restore();
 }
-
-
-
 
 
 void SpeedPanel::speedUpdated()

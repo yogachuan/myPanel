@@ -58,14 +58,14 @@ void ThermometreDlg::drawBottom(QPainter &painter)
 {
     painter.save();
     QRectF tmpRect = QRectF(m_rect.bottomLeft(), QPointF(m_width, height()/2- m_width*m_radius));
-    QColor color = m_value > 30? QColor(255, 0, 0) : QColor(Qt::green);
+    QColor color = m_value > 30? RED : GREEN;
     painter.fillRect(tmpRect, color);
     painter.setPen(Qt::NoPen);
     painter.setBrush(color);
     QPointF centerPoint(tmpRect.bottomLeft()+QPointF(tmpRect.width()/2, 0));
     painter.drawEllipse(centerPoint,m_width*m_radius, m_width*m_radius);
 
-    painter.setPen(Qt::black);
+    painter.setPen(BLACK);
     QFontMetricsF fm = QFontMetricsF(painter.font());
     QString str = QString("%1℃").arg(m_value);
     int w= (int)fm.width(str);
@@ -78,7 +78,7 @@ void ThermometreDlg::drawBottom(QPainter &painter)
 void ThermometreDlg::drawScale(QPainter &painter)
 {
     painter.save();
-    painter.setPen(QColor(Qt::black));
+    painter.setPen(BLACK);
     int nYCount = (maxValue - minValue)/10+1;
     qreal perHeight = (m_rect.height())/nYCount;
     for (int i=0; i<nYCount; ++i) {
@@ -107,7 +107,7 @@ void ThermometreDlg::drawScale(QPainter &painter)
         h = 0;
     if(h > m_rect.height())
         h = m_rect.height();
-    QColor color = m_value > 30? QColor(255, 0, 0) : QColor(Qt::green);
+    QColor color = m_value > 30? RED : GREEN;
     painter.fillRect(m_rect.adjusted(0, m_rect.height()-h-perHeight/2-1 , 0, 0), color);
 }
 

@@ -14,7 +14,10 @@
 #include <QKeyEvent>
 #include <QFontMetricsF>
 #include <QPointF>
-
+#define YELLOW QColor(Qt::yellow)
+#define WHITE QColor(Qt::white)
+#define RED QColor(Qt::red)
+#define GREEN QColor(Qt::green)
 
 
 class ShipPanel : public QWidget
