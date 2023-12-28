@@ -88,6 +88,7 @@ void ThermometreDlg::drawScale(QPainter &painter)
         for (int j=1; j<10; ++j) {
             if(i == nYCount -1)
                 continue;
+            //小刻度
             painter.drawLine(basePoint-QPointF(0, perHeight/10*j),basePoint-QPointF(5, perHeight/10*j));
         }
         painter.drawText(basePoint+QPointF(-28, 4), QString("%1").arg(minValue+i*10));
@@ -97,6 +98,7 @@ void ThermometreDlg::drawScale(QPainter &painter)
         for (int j=1; j<10; ++j) {
             if(i == nYCount -1)
                 continue;
+            //小刻度
             painter.drawLine(basePoint-QPointF(0, perHeight/10*j),basePoint-QPointF(-5, perHeight/10*j));
         }
     }

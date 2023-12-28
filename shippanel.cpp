@@ -169,12 +169,15 @@ void ShipPanel:: DrawUnit(QPainter & painter, int radius)
     font.setBold(true);
     painter.setFont(font);
     painter.translate(QPointF(0,0).x(),QPointF(0,0).y() );
-    QString num = QString::number(degRotate-30);
-
+    QString deg = QString::number(degRotate-30);
+    QString ph = QString::number(pitch);
 
     QFontMetricsF fm = QFontMetricsF(painter.font());
-    QString str = QString("舵角：%1 °").arg(num);
-    painter.drawText(QPointF(-this->width()/2,this->height()/2),str);
+    int h = (int)fm.height();
+    QString degStr = QString("舵角：%1 °").arg(deg);
+    QString phStr = QString("俯仰：%1 ").arg(ph);
+    painter.drawText(QPointF(-this->width()/2,this->height()/2),degStr);
+    painter.drawText(QPointF(-this->width()/2,this->height()/2-h),phStr);
 
     painter.restore();
 }
