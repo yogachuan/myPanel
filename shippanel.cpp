@@ -28,6 +28,7 @@ void ShipPanel::setDegValue(qreal deg)
     if(deg < -30 | deg >30)
         return;
     degRotate = deg + 30;
+    update();
 }
 
 void ShipPanel::setPitchValue(qreal ph)
@@ -189,8 +190,8 @@ void ShipPanel::  DrawPointer(QPainter &painter, int radius)
 {
     //组装点的路径图
     QPainterPath pointPath;
-    pointPath.moveTo(10,-radius/4);
-    pointPath.lineTo(-10,-radius/4);
+    pointPath.moveTo(5,-radius/8);
+    pointPath.lineTo(-5,-radius/8);
     pointPath.lineTo(-1,0);
     pointPath.lineTo(1,0);
     painter.save();

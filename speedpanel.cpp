@@ -24,6 +24,7 @@ SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
 void SpeedPanel::setValue(qreal value)
 {
     degRotate = value*8;
+    update();
 }
 
 qreal SpeedPanel::getValue()
