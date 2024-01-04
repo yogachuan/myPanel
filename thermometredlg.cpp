@@ -24,9 +24,15 @@ ThermometreDlg::ThermometreDlg(QWidget *parent) : QWidget(parent)
 
 void ThermometreDlg::paintEvent(QPaintEvent *event)
 {
+    double width = this->width();
+    double height = this->height();
+    double side = qMin(width, height);
+    double scale = side/300;
+
     updateRect();
     QPainter painter(this);
     painter.translate(this->width()/2, this->height()/2);  //坐标轴移动到中心点
+    painter.scale(scale,scale);
     painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);  // 启用反锯齿
     //绘制上方的柱状
     drawRect(painter);
@@ -66,6 +72,7 @@ void ThermometreDlg::drawBottom(QPainter &painter)
     painter.drawEllipse(centerPoint,m_width*m_radius, m_width*m_radius);
 
     painter.setPen(BLACK);
+    painter.setFont(setFont("Arial", 8));
     QFontMetricsF fm = QFontMetricsF(painter.font());
     QString str = QString("%1℃").arg(m_value);
     int w= (int)fm.width(str);
@@ -111,6 +118,16 @@ void ThermometreDlg::drawScale(QPainter &painter)
         h = m_rect.height();
     QColor color = m_value > 30? RED : GREEN;
     painter.fillRect(m_rect.adjusted(0, m_rect.height()-h-perHeight/2-1 , 0, 0), color);
+}
+
+QFont ThermometreDlg::setFont(QString fontName, int size, bool bold)
+{
+    QFont font;
+    font.setFamily(fontName);
+    font.setPointSize(size);
+    font.setBold(bold);
+
+    return font;
 }
 
 

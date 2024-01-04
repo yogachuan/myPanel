@@ -38,6 +38,8 @@ private:
     void drawBottom(QPainter &painter);
     void drawScale(QPainter &painter);
 
+    QFont setFont(QString fontName, int size, bool bold=false);
+
 private:
     qreal m_value;
     qreal curValue;

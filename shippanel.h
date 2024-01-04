@@ -51,6 +51,7 @@ private:
     void DrawVScale(QPainter& painter,int d);//纵摇刻度线
     void DrawBG(QPainter& painter,int l, int r);//画背景
     void DrawBaseLines(QPainter& painter);//画基准线
+    QFont setFont(QString fontName, int size, bool bold=false);
 
 
 private:

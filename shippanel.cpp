@@ -40,10 +40,14 @@ void ShipPanel::setPitchValue(qreal ph)
 
 void ShipPanel::paintEvent(QPaintEvent *event)
 {
+    double width = this->width();
+    double height = this->height();
+    double side = qMin(width, height);
+    double scale = side/250;
+//    qDebug()<<scale;
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-    int width=this->width();
-    int height=this->height();//移动仪表盘的高度
+
     int radius=((width>height)?height:width)/2.0;//仪表盘的中心位置
     //设置画笔
     painter.setPen(Qt::NoPen);
@@ -54,6 +58,7 @@ void ShipPanel::paintEvent(QPaintEvent *event)
     //移动画笔到中下方
     painter.translate(width/2,height/2);
 
+    painter.scale(scale,scale);
     painter.rotate(degRotate-30);
 
     DrawBaseLines(painter);//画基准线
@@ -86,12 +91,6 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
 //    pointPath_big.lineTo(8,2);
 //    pointPath_big.lineTo(8,-2);
 
-    QFont font;
-    font.setFamily("Arial");
-    font.setPointSize(8);
-//    font.setBold(true);
-    painter.setFont(font);
-
     //绘制31个小点
     for(int i=0;i<31;++i){
         QPointF point(0,0);
@@ -99,6 +98,7 @@ void ShipPanel::DrawHScale(QPainter& painter,int radius)
         point.setX(radius*qCos(((240+i*2)*M_PI)/180));
         point.setY(radius*qSin(((240+i*2)*M_PI)/180));
 
+        painter.setFont(setFont("Arial", 8));
         painter.translate(point.x(), point.y());
 //        坐标系旋转
         painter.rotate(60+i*2);
@@ -164,11 +164,7 @@ void ShipPanel:: DrawUnit(QPainter & painter, int radius)
     painter.save();
     painter.setPen(WHITE);
     painter.rotate(-degRotate+30);
-    QFont font;
-    font.setFamily("Arial");
-    font.setPointSize(10);
-    font.setBold(true);
-    painter.setFont(font);
+    painter.setFont(setFont("Arial", 8));
     painter.translate(QPointF(0,0).x(),QPointF(0,0).y() );
     QString deg = QString::number(degRotate-30);
     QString ph = QString::number(pitch);
@@ -229,7 +225,7 @@ void ShipPanel::DrawCircle_line(QPainter &painter, int radius)
 
 void ShipPanel::DrawVScale(QPainter &painter, int d)
 {
-    QPainterPath pointPath_big;
+//    QPainterPath pointPath_big;
 //    pointPath_big.moveTo(-2*d,-1);
 //    pointPath_big.lineTo(-2*d,1);
 //    pointPath_big.lineTo(2*d,1);
@@ -250,11 +246,8 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
 
         //设置画笔，画笔默认NOPEN
         painter.setPen(WHITE);
-        QFont font;
-        font.setFamily("Arial");
-        font.setPointSize(8);
-//        font.setBold(true);
-        painter.setFont(font);
+
+        painter.setFont(setFont("Arial", 8));
 
 
         if(i%10 == 0)
@@ -336,6 +329,16 @@ void ShipPanel::DrawBaseLines(QPainter &painter)
     painter.restore();
 }
 
+QFont ShipPanel::setFont(QString fontName, int size,bool bold)
+{
+    QFont font;
+    font.setFamily(fontName);
+    font.setPointSize(size);
+    font.setBold(bold);
+
+    return font;
+}
+
 
 
 void ShipPanel::degUpdate()
@@ -360,6 +363,7 @@ void ShipPanel::degUpdate()
 
     update();//很重要，通过update方法自动调用paintEvent
 }
+
 
 void ShipPanel::pitchUpdate()
 {

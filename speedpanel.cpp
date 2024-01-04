@@ -35,13 +35,17 @@ qreal SpeedPanel::getValue()
 
 void SpeedPanel::paintEvent(QPaintEvent *event)
 {
+    double width = this->width();
+    double height = this->height();
+    double side = qMin(width, height);
+    double scale = side/400;
+
     QPainter painter(this);
     painter.drawPixmap(rect(), m_bg, QRect());
-    int width=this->width();
-    int height=this->height();//移动仪表盘的高度
     int radius=((width>height)?height:width)/2.0;//仪表盘的中心位置                                                                                                                                                                                                 ;
     //移动画笔到中下方
     painter.translate(width/2,height/2);
+    painter.scale(scale,scale);
     //设置画笔
     painter.setPen(Qt::NoPen);
     //启用反锯齿
@@ -78,15 +82,13 @@ void SpeedPanel::DrawSmallScale(QPainter& painter,int radius)
 //    pointPath_big.lineTo(2,20);
 //    pointPath_big.lineTo(-2,20);
 
-    QFont font;
-    font.setFamily("Arial");
-    font.setPointSize(10);
-    painter.setFont(font);
 
     //绘制31个小点
     for(int i=0;i<31;++i){
         QPointF point(0,0);
         painter.save();
+
+        painter.setFont(setFont("Arial", 8));
         point.setX(radius*qCos(((210-i*8)*M_PI)/180));
         point.setY(radius*qSin(((210-i*8)*M_PI)/180));
 
@@ -149,11 +151,8 @@ void SpeedPanel:: DrawUnit(QPainter & painter, int radius)
     painter.save();
     painter.setPen(WHITE);
 
-    QFont font;
-    font.setFamily("Arial");
-    font.setPointSize(10);
-    font.setBold(true);
-    painter.setFont(font);
+
+    painter.setFont(setFont("Arial", 8, true));
 
     QFontMetricsF fm1 = QFontMetricsF(painter.font());
     int w1 = (int)fm1.width(QString("Kn/H"));
@@ -179,6 +178,16 @@ void SpeedPanel::DrawCircle_arc(QPainter &painter, int radius)
     Conical.setColorAt(0.5,QColor(53,179,251,150));//蓝色
     painter.setBrush(Conical);
     painter.drawPie(rect,210*16,-(degRotate)*16);//注意其单位是1/16角度，而不是弧度。
+}
+
+QFont SpeedPanel::setFont(QString fontName, int size, bool bold)
+{
+    QFont font;
+    font.setFamily(fontName);
+    font.setPointSize(size);
+    font.setBold(bold);
+
+    return font;
 }
 
 //指针
@@ -265,10 +274,8 @@ void SpeedPanel::DrawCircle_bom_small(QPainter &painter, int radius)
 
     //时速
     painter.setPen(WHITE);
-    QFont font;
-    font.setFamily("Arial");
-    font.setPointSize(20);
-    painter.setFont(font);
+
+    painter.setFont(setFont("Arial", 20,true));
 
     QFontMetricsF fm = QFontMetricsF(painter.font());
     QString str = QString::number(degRotate/8);

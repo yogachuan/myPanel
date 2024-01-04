@@ -43,6 +43,8 @@ private:
     void DrawCircle_bom_small(QPainter& painter,int radius);//中间小圆
     void DrawCircle_arc(QPainter& painter,int radius);//动态扇形环.
 
+    QFont setFont(QString fontName, int size, bool bold=false);
+
 private:
     QPixmap m_bg;//背景图片
     QTimer *myTimer;
