@@ -4,6 +4,7 @@
 ShipPanel::ShipPanel(QWidget *parent) : QWidget(parent)
 {
 //    setFixedSize(1280,800);
+
     myTimer = new QTimer(this);
     myTimer->start(100);
     connect(myTimer, &QTimer::timeout, this, [=]{
@@ -276,32 +277,55 @@ void ShipPanel::DrawBG(QPainter &painter, int l, int r)
     int w = this->width()/2;
     int h = this->height();
 
-    QPointF points_top[4] = {
-        QPointF(0,0),
-        QPointF(0,l+w*qTan((30-degRotate)*M_PI/180)),
-        QPointF(2*w, r-w*qTan((30-degRotate)*M_PI/180)),
-        QPointF(2*w, 0),
-    };
-    QPointF points_bottom[4] = {
-        QPointF(0,l+w*qTan((30-degRotate)*M_PI/180)),
-        QPointF(0,h),
-        QPointF(2*w, h),
-        QPointF(2*w,r-w*qTan((30-degRotate)*M_PI/180)),
-    };
-
     painter.save();
     //设置线性渐变色k
     QLinearGradient lineGradient(w-h/2*qTan((30-degRotate)*M_PI/180),0,w,h/2);
     lineGradient.setColorAt(0,QColor(0,135,189));
     lineGradient.setColorAt(1,QColor(158,194,208));
-    //设置画刷
+
+    QRect rect(0,0,2*w,h);
+
+
+    QPoint top_tl =rect.topLeft();
+    QPoint top_tr =rect.topRight();
+    QPointF top_br =QPointF(2*w, r-w*qTan((30-degRotate)*M_PI/180));
+    QPointF top_bl =QPointF(0,l+w*qTan((30-degRotate)*M_PI/180));
+
+    QPoint bottom_bl=rect.bottomLeft();
+    QPoint bottom_br=rect.bottomRight();
+    QPointF bottom_tr=QPointF(2*w,r-w*qTan((30-degRotate)*M_PI/180));
+    QPointF bottom_tl=QPointF(0,l+w*qTan((30-degRotate)*M_PI/180));
+    // 创建上半部分的梯形路径
+    QPainterPath topTrapezoidPath;
+    topTrapezoidPath.moveTo(top_tl);
+    topTrapezoidPath.lineTo(top_tr);
+    topTrapezoidPath.lineTo(top_br);
+    topTrapezoidPath.lineTo(top_bl);
+    topTrapezoidPath.lineTo(top_tl);
+
+    // 创建下半部分的梯形路径
+    QPainterPath bottomTrapezoidPath;
+    bottomTrapezoidPath.moveTo(bottom_bl);
+    bottomTrapezoidPath.lineTo(bottom_br);
+    bottomTrapezoidPath.lineTo(bottom_tr);
+    bottomTrapezoidPath.lineTo(bottom_tl);
+    bottomTrapezoidPath.lineTo(bottom_bl);
+
+    // 设置上半部分和下半部分的画刷颜色
+//    topTrapezoidPath.arcTo(top_tl.x(), top_tl.y(), 40, 40, 90, 90);
+//    topTrapezoidPath.arcTo(top_tr.x() -40, top_tr.y(), 40, 40, 0, 90);
     painter.setBrush(lineGradient);
-    painter.drawPolygon(points_top, 4);
+    painter.drawPath(topTrapezoidPath);
+
+
+//    bottomTrapezoidPath.arcTo(bottom_bl.x(),bottom_bl.y()-40,40,40,180,90);
+//    bottomTrapezoidPath.arcTo(bottom_br.x()-40,bottom_br.y()-40, 40,40,270,90);
     painter.setBrush(QBrush(QColor(0,105,148)));
-    painter.drawPolygon(points_bottom, 4);
+    painter.drawPath(bottomTrapezoidPath);
 
     painter.restore();
 }
+
 
 void ShipPanel::DrawBaseLines(QPainter &painter)
 {
