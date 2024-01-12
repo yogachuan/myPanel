@@ -44,6 +44,7 @@ private:
     void DrawCircle_arc(QPainter& painter,int radius);//动态扇形环.
 
     QFont setFont(QString fontName, int size, bool bold=false);
+    void DrawBG(QPainter& painter,int radius);
 
 private:
     QPixmap m_bg;//背景图片

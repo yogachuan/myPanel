@@ -242,7 +242,7 @@ void ShipPanel::DrawVScale(QPainter &painter, int d)
     {
         painter.save();
         QPointF point(0,0);
-        point.setY((d/4)*(i+pitch)); //(d/3.5)为纵向刻度间距
+        point.setY((d/4)*(i-pitch)); //(d/3.5)为纵向刻度间距
         painter.translate(point.x(), -point.y());
 
         //设置画笔，画笔默认NOPEN
@@ -397,6 +397,7 @@ void ShipPanel::pitchUpdate()
         if(pitch > 10)
         {
             VDirection=0;
+            pitch =10;
         }
     }
     else
