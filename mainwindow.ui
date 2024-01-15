@@ -19,7 +19,11 @@
      <widget class="ShipPanel" name="shipPanel" native="true"/>
     </item>
     <item>
-     <widget class="SpeedPanel" name="speedPanel" native="true"/>
+     <widget class="SpeedPanel" name="speedPanel" native="true">
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="ThermometreDlg" name="thermometreDlg" native="true">
@@ -42,15 +46,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ShipPanel</class>
-   <extends>QWidget</extends>
-   <header>shippanel.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>SpeedPanel</class>
    <extends>QWidget</extends>
    <header>speedpanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ShipPanel</class>
+   <extends>QWidget</extends>
+   <header>shippanel.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

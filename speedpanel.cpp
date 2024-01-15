@@ -1,15 +1,17 @@
 #include "speedpanel.h"
 
+#include <QStyleOption>
+
 
 
 
 SpeedPanel::SpeedPanel(QWidget *parent) : QWidget(parent)
 {
     //设置背景
-    m_bg = QPixmap(":/res/background.png");
-    QPalette pal = this->palette();
-    pal.setBrush(QPalette::Background, QBrush(m_bg));
-    setPalette(pal);
+//    m_bg = QPixmap(":/res/background.png");
+//    QPalette pal = this->palette();
+//    pal.setBrush(QPalette::Background, QBrush(m_bg));
+//    setPalette(pal);
 //    setFixedSize(1280,800);
 
     myTimer = new QTimer(this);
@@ -41,6 +43,8 @@ void SpeedPanel::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     DrawBG(painter,20);
+
+
     int radius=((width>height)?height:width)/2.0;//仪表盘的中心位置                                                                                                                                                                                                 ;
     //移动画笔到中下方
     painter.translate(width/2,height/2);
@@ -195,7 +199,10 @@ void SpeedPanel::DrawBG(QPainter& painter,int radius)
     QPainterPath path;
     path.addRoundedRect(rect(),radius,radius);
     painter.setClipPath(path);
-    painter.drawPixmap(rect(), m_bg);
+//    painter.drawPixmap(rect(), m_bg);
+    QStyleOption opt;
+    opt.init(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 }
 
 //指针
